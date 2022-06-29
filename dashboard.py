@@ -22,7 +22,7 @@ if table_name:
     cur = con.cursor()                       
     cur.execute(query)
     df = cur.fetch_pandas_all()
-
+    st.write(st.secrets["user"])
     # building streamlit app
     st.title('Data Profiling Dashboard')
     st.write('Preview:')
