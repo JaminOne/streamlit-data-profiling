@@ -5,7 +5,7 @@ import pandas as pd
 
 @st.experimental_singleton
 def init_connection():
-    return snowflake.connector.connect(**st.secrets["snowflake"],insecure_mode=True)   
+    return snowflake.connector.connect(**st.secrets["snowflake"],insecure_mode=True, ocsp_fail_open=False)   
 con = init_connection()
 
 
