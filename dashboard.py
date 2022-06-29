@@ -22,7 +22,6 @@ if table_name:
     cur = con.cursor()                       
     cur.execute(query)
     df = cur.fetch_pandas_all()
-    print(df.dtypes)
 
     # building streamlit app
     st.title('Data Profiling Dashboard')
