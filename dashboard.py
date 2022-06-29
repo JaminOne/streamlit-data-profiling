@@ -3,26 +3,28 @@ import snowflake.connector
 import pandas as pd
 # from credentials import sf_credentials
 
+@st.experimental_singleton
+def init_connection():
+    return snowflake.connector.connect(**st.secrets["snowflake"])   
+con = init_connection()
+
+
+# Perform query.
+# Uses st.experimental_memo to only rerun when the query changes or after 10 min.
+@st.experimental_memo(ttl=600)
+def run_query(query):
+    with con.cursor() as cur:
+        cur.execute(query)
+        return cur.fetch_pandas_all()
+
 table_name = st.text_input("Enter Table Name", type = "default")
 
 
 if table_name:
-
     # sf_table = "JAMIN_TEST.PUBLIC.SALES_TALEND_CREATE"
-    query = f"select * from  {table_name}"
-
-    # connect to snowflake
-    con = snowflake.connector.connect(user = st.secrets["user"],
-                                        password = st.secrets["password"],
-                                        account = st.secrets["account"], 
-                                        warehouse= st.secrets["warehouse"], 
-                                        database = st.secrets["database"],       
-                                        schema = st.secrets["schema"],
-                                        protocol="https")   
-    cur = con.cursor()                       
-    cur.execute(query)
-    df = cur.fetch_pandas_all()
-    st.write(st.secrets["user"])
+    query = f"select * from {table_name}"
+    df = run_query(query)
+    # st.write(st.secrets["user"])
     # building streamlit app
     st.title('Data Profiling Dashboard')
     st.write('Preview:')
@@ -32,7 +34,7 @@ if table_name:
     columns_length = len(df.columns)
     row_length = len(df)
 
-    # shapre
+    # shape
     st.write(f"Table has {columns_length} columns * {row_length} rows")
 
     # table status
