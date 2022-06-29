@@ -1,8 +1,7 @@
-from xml.etree.ElementInclude import include
 import streamlit as st
 import snowflake.connector
 import pandas as pd
-from credentials import sf_credentials
+# from credentials import sf_credentials
 
 table_name = st.text_input("Enter Table Name", type = "default")
 
@@ -13,12 +12,12 @@ if table_name:
     query = f"select * from  {table_name}"
 
     # connect to snowflake
-    con = snowflake.connector.connect(user = sf_credentials["user"],
-                                        password = sf_credentials["password"],
-                                        account = sf_credentials["account"], 
-                                        warehouse= sf_credentials["warehouse"], 
-                                        database = sf_credentials["database"],       
-                                        schema = sf_credentials["schema"],
+    con = snowflake.connector.connect(user = st.secrets["user"],
+                                        password = st.secrets["password"],
+                                        account = st.secrets["account"], 
+                                        warehouse= st.secrets["warehouse"], 
+                                        database = st.secrets["database"],       
+                                        schema = st.secrets["schema"],
                                         protocol="https")   
     cur = con.cursor()                       
     cur.execute(query)
