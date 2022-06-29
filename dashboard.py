@@ -9,22 +9,24 @@ def init_connection():
 con = init_connection()
 
 
+
 # Perform query.
 # Uses st.experimental_memo to only rerun when the query changes or after 10 min.
-@st.experimental_memo(ttl=600)
-def run_query(query):
-    with con.cursor() as cur:
-        cur.execute(query)
-        return cur.fetch_pandas_all()
+# @st.experimental_memo(ttl=600)
+# def run_query(query):
+#     with con.cursor() as cur:
+#         cur.execute(query)
+#         return cur.fetch_pandas_all()
 
 table_name = st.text_input("Enter Table Name", type = "default")
 
 
 if table_name:
     # sf_table = "JAMIN_TEST.PUBLIC.SALES_TALEND_CREATE"
+     # df = run_query(query)
     query = f"select * from {table_name}"
-    df = run_query(query)
-    # st.write(st.secrets["user"])
+    df = pd.read_sql(query, con)
+   
     # building streamlit app
     st.title('Data Profiling Dashboard')
     st.write('Preview:')
