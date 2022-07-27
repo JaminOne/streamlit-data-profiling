@@ -4,7 +4,7 @@ import pandas as pd
 from app_password import check_password
 
 if check_password():
-    st.write("Here goes your normal Streamlit app...")
+    st.write("Do Less and More...")
     @st.experimental_singleton
     def init_connection():
         return snowflake.connector.connect(**st.secrets["snowflake"],insecure_mode=True, ocsp_fail_open=False)   
